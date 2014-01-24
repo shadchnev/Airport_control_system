@@ -30,6 +30,18 @@ describe 'Airport' do
 			expect(airport.plane_count).to eq(1)
 		end
 
+		context 'traffic control' do
+
+			it 'a plane cannot land if the airport is full' do
+				plane = double :plane
+				expect(airport).to_not be_full
+				100.times { airport.land(plane) }
+				expect(airport).to be_full
+				expect{ airport.land(plane) }.to raise_error('Airport full: cannot land')
+			end
+
+		end
+
 	end
 
 end
