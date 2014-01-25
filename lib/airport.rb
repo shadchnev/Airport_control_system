@@ -1,4 +1,8 @@
+require_relative './weather'
+
 class Airport
+
+	include Weather
 
 	DEFAULT_CAPACITY = 100
 
@@ -6,31 +10,32 @@ class Airport
 		@plane = []
 	end
 
-	# def plane
-	# 	@plane
-	# end
-
 	def plane_count
 		@plane.count
 	end
 
-	def land(plane)
+	def land_plane(plane)
 		raise "Airport full: cannot land" if full?
-
+		raise "cannot land: Stormy weather" if current_weather == :stormy
 		@plane << plane
+		plane.landed
 	end
 
 	def take_off(plane)
+		raise "cannot take off: Stormy weather" if current_weather == :stormy
 		@plane.delete(plane)
-	end
-
-	def full?
-		plane_count == capacity
+		plane.flying
 	end
 
 	def capacity
 		DEFAULT_CAPACITY
 	end 
+
+	def full?
+		plane_count == capacity
+	end
+
+	
 
 end
 
