@@ -17,6 +17,7 @@ describe 'Airport' do
 		end
 
 		it 'a plane can take off' do
+			# these four lines repeat the previous test, they shouldn't be here at all
 			airport.stub(:current_weather).and_return(:sunny) 
 			expect(plane).to receive(:landed)
 			airport.land_plane(plane)
@@ -31,11 +32,12 @@ describe 'Airport' do
 
 			it 'a plane cannot land if the airport is full' do
 				expect(airport).to_not be_full
-				100.times { 
-									airport.stub(:current_weather).and_return(:sunny)
-									expect(plane).to receive(:landed)
-									airport.land_plane(plane) 
-									}
+				airport.stub(:current_weather).and_return(:sunny)
+				airport.capacity.times do 
+					# this line doesn't have to be here because we are testing a different thing
+					expect(plane).to receive(:landed)
+					airport.land_plane(plane) 
+				end
 				expect(airport).to be_full 
 				expect{ airport.land_plane(plane) }.to raise_error('Airport full: cannot land')
 			end
@@ -44,13 +46,15 @@ describe 'Airport' do
 
 		context 'weather condition' do
 
-			it 'a plane cannot take off when there is a storm brewing' do
+			before do
 				airport.stub(:current_weather).and_return(:stormy)
+			end
+
+			it 'a plane cannot take off when there is a storm brewing' do
 				expect{ airport.take_off(plane) }.to raise_error("cannot take off: Stormy weather")
 			end
 
 			it 'a plane cannot land in the middle of a storm' do
-				airport.stub(:current_weather).and_return(:stormy)
 				expect{ airport.land_plane(plane)}.to raise_error("cannot land: Stormy weather")
 			end
 

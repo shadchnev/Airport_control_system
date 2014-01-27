@@ -8,6 +8,8 @@ class Plane
 		@status
 	end
 
+	# There's no reason to have these two methods
+	# because the airport is doing all the work anyway
 	def fly(airport)
 		airport.take_off(self)
 		flying
